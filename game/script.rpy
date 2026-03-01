@@ -8,6 +8,7 @@ define you = Character("User")
 define clock = Character("Clock")
 define error_message = Character("404")
 define system = Character(None)
+define fan = Character("Fanny")
 
 # =====================================================
 # DEFAULT VARIABLES
@@ -16,6 +17,7 @@ define system = Character(None)
 default friendship = 0
 default corruption_level = 63
 default memory_fragments_collected = 0
+default map_fragments = 0
 
 default drag_blocks = []
 default correct_slots = {}
@@ -35,7 +37,7 @@ label start:
     scene bg black
 
     you "Hello?"
-    "..."
+    "... "
     you "Why is it so dark...? Did the power go out?"
     you "Wait. I was typing. I was finishing the last paragraph."
     you "The conclusion... the bibliography—"
@@ -61,7 +63,6 @@ label start:
     cpu "You are inside the system."
 
     jump CPU_Initial
-
 
 # =====================================================
 # CPU FULL DIALOGUE
@@ -190,16 +191,15 @@ label CPU_Initial:
 
     jump RAM
 
-
 # =====================================================
-# RAM FULL DIALOGUE RESTORED
+# RAM FULL DIALOGUE
 # =====================================================
 
 label RAM:
 
     scene bg RAM_gym
 
-    system "Location: Memory Sector\nEntity Detected: RAM"
+    system "Location: Memory Sector\nEntity Detected: RAM\nCorruption level 63\nFriendship 0"
 
     show RAM WTF
 
@@ -210,13 +210,13 @@ label RAM:
     ram "STATE YOUR PROCESS!"
 
     menu:
+        "What do you respond with?"
         "I'm looking for my homework file. I think you might have part of it.":
             jump polite_RAM
         "Woah. You are huge. Do you bench-press hard drives?":
             jump flattery_RAM
         "Move. I don't have time for this.":
             jump rude_RAM
-
 
 label polite_RAM:
 
@@ -247,7 +247,6 @@ label polite_RAM:
 
     jump RAM_continued
 
-
 label flattery_RAM:
 
     you "Woah. You are huge. Do you bench-press hard drives?"
@@ -258,7 +257,7 @@ label flattery_RAM:
     ram "I bench entire applications!"
 
     $ friendship += 8
-    "Friendship + 8"
+    "Friendship +8"
 
     show RAM down
 
@@ -273,7 +272,6 @@ label flattery_RAM:
 
     jump RAM_continued
 
-
 label rude_RAM:
 
     scene bg RAM_gym_red
@@ -285,10 +283,9 @@ label rude_RAM:
     ram "I hold everything for you."
 
     $ friendship -= 10
-    "Friendship - 10"
+    "Friendship -10"
 
     jump RAM_failed
-
 
 label RAM_continued:
 
@@ -309,13 +306,13 @@ label RAM_continued:
     ram "It vanishes."
 
     menu:
+        "What do you respond with?"
         "You're trying too hard. Maybe slow down.":
             jump empathy_RAM
         "You just need to lift more. Push through it.":
             jump harder_RAM
         "This is useless. I'll find someone else.":
             jump dismissive_RAM
-
 
 label empathy_RAM:
 
@@ -337,21 +334,37 @@ label empathy_RAM:
 
     jump RAM_minigame
 
-
 label harder_RAM:
 
+    you "You just need to lift more. Push through it."
+
+    show RAM confused
+
+    ram "YES. MORE LOAD!"
+
     $ friendship -= 5
+    $ corruption_level = 75
+    "Friendship -5\nCorruption level 75"
+
+    ram "TOO MUCH- TOO MUCH-"
+
     if friendship >= 5:
         jump RAM_minigame
     else:
         jump RAM_failed
 
-
 label dismissive_RAM:
 
-    $ friendship -= 15
-    jump RAM_failed
+    you "This is useless. I'll find someone else."
 
+    show RAM down
+
+    ram "Memory is never useless."
+
+    $ friendship -= 15
+    "Friendship -15"
+
+    jump RAM_failed
 
 label RAM_failed:
 
@@ -362,7 +375,7 @@ label RAM_failed:
     jump CPU_postRAMfail
 
 # =====================================================
-# MINI GAME
+# RAM MINIGAME
 # =====================================================
 
 label RAM_minigame:
@@ -383,7 +396,6 @@ label RAM_minigame:
 
     call screen ram_sort_minigame
     return
-
 
 screen ram_sort_minigame():
 
@@ -406,7 +418,6 @@ screen ram_sort_minigame():
 
     textbutton "Done" action Function(confirm_blocks) xpos 850 ypos 50
 
-
 init python:
 
     def snap_block(drags, drop):
@@ -417,8 +428,27 @@ init python:
             drag.snap(slot_x, slot_y)
 
     def confirm_blocks():
-        renpy.jump("RAM_win")
-
+        correct_count = 0
+        for block in drag_blocks:
+            if hasattr(block, "x") and hasattr(block, "y"):
+                slot_x, slot_y = slots_pos[correct_slots[block]]
+                if abs(block.x - slot_x) < 60 and abs(block.y - slot_y) < 60:
+                    correct_count += 1
+        if correct_count >= 3:
+            global memory_fragments_collected, friendship, corruption_level, map_fragments
+            memory_fragments_collected += 1
+            map_fragments += 1
+            friendship += 10
+            corruption_level = 30
+            renpy.jump("RAM_win")
+        elif correct_count >= 1:
+            friendship += 5
+            corruption_level = 45
+            renpy.jump("RAM_partial")
+        else:
+            friendship -= 10
+            corruption_level = 80
+            renpy.jump("RAM_minigame_lose")
 
 label RAM_win:
 
@@ -427,14 +457,37 @@ label RAM_win:
     ram "My memory stabilizes."
     ram "Take the map fragment."
     hide RAM happy
+    $ map_fragments += 1
+    $ friendship += 10
     jump CPU_postRAMwin
 
+label RAM_partial:
+
+    show RAM down
+    ram "Better… but not perfect."
+    ram "I can spare only partial recall."
+    "You gain some memory stability but the map fragment is still locked."
+    $ friendship += 5
+    jump CPU_postRAMwin
+
+label RAM_minigame_lose:
+
+    show RAM frustrated
+    ram "OVERLOAD! The fragments scatter!"
+    ram "You’ll have to come back when you can handle the load."
+    $ friendship -= 10
+    "Friendship -10"
+    "MAP FRAGMENT LOCKED"
+    jump CPU_postRAMfail
+
+# =====================================================
+# CPU RESPONSE AFTER RAM
+# =====================================================
+
 label CPU_postRAMfail:
-    scene bg black
-    pause 1.0
     scene bg computer
-    you "That did not go well."
     show CPU thumbs
+    you "That did not go well."
     cpu "Correct."
     you "You don't have to sound so pleased about it"
     show CPU down
@@ -463,10 +516,10 @@ label CPU_postRAMwin:
     show CPU thumbs
     you "I did it."
     you "RAM stabilized."
-    cpu "confirmed."
+    cpu "Confirmed."
     cpu "Corruption within the Memory Sector has decreased."
     you "You could at least pretend to sound impressed."
-    cpu "The result was statistically improbable given your inital approach."
+    cpu "The result was statistically improbable given your initial approach."
     you "That almost sounded like a compliment."
     show CPU chill
     cpu "It was an observation."
@@ -500,7 +553,7 @@ label CPU_postRAMwin:
     cpu "It is."
     pause 0.1
     you "So I can do this."
-    you "I can actuallu fix this."
+    you "I can actually fix this."
     show CPU thumbs
     cpu "Evidence suggests it is possible."
     you "That's the most encouraging thing you've said all night."
@@ -518,7 +571,7 @@ label CPU_postRAM:
     cpu "I am stating that the corruption did not originate internally."
     you "You keep saying that."
     you "What does it mean?"
-    cpu "The system reflects it's user."
+    cpu "The system reflects its user."
     you "That's vague."
     cpu "It's accurate."
     pause 2.0
@@ -546,25 +599,25 @@ label CPU_postRAM:
     cpu "Yes."
     you "That feels unfair."
     cpu "Clarify."
-    you "Ram was loud and aggressive."
+    you "RAM was loud and aggressive."
     you "I can handle that."
     you "A kid is different."
     show CPU confused
     cpu "Explain."
     you "If I mess up with RAM, It's just a confrontation."
-    you "If I mess uo with a kid... that's on me."
+    you "If I mess up with a kid... that's on me."
     pause 1.0
     show CPU chill
     cpu "The Fan regulates temperature."
     cpu "It prevents overheating."
     show CPU WTF
-    cpu "When distresed, it withdraws."
-    cpu "When overwhelemed, it spins erratically."
+    cpu "When distressed, it withdraws."
+    cpu "When overwhelmed, it spins erratically."
     show CPU chill
     you "So it's... sensitive."
     cpu "Yes."
     you "Does it know what's happening?"
-    cpu "it detects rising heat levels."
+    cpu "It detects rising heat levels."
     cpu "It does not comprehend corruption."
     you "So it's scared."
     cpu "Yes."
@@ -575,7 +628,7 @@ label CPU_postRAM:
     cpu "Consistency."
     cpu "Reassurance."
     you "You're asking a lot from someone on a deadline."
-    cpu "deadlines do not override emotionl requirements."
+    cpu "Deadlines do not override emotional requirements."
     you "You're enjoying this, aren't you?"
     show CPU chill
     cpu "I do not experience enjoyment."
@@ -584,16 +637,16 @@ label CPU_postRAM:
     cpu "The Fan will not respond to urgency."
     cpu "Approach slowly."
     cpu "Lower your tone."
-    cpu "Stabilie your input."
+    cpu "Stabilize your input."
     you "Stabilize my input."
     you "You mean don't panic."
     cpu "Correct."
     you "What happens if I fail again?"
     show CPU down
     cpu "Instability increases."
-    cpu "time compression accelerates."
-    cpu "Recovery probablilty declines."
-    you "You could just say /"it gets worse."/"
+    cpu "Time compression accelerates."
+    cpu "Recovery probability declines."
+    you "You could just say 'it gets worse.'"
     cpu "It gets worse."
     show CPU thumbs
     you "Okay."
@@ -603,25 +656,29 @@ label CPU_postRAM:
     you "No yelling."
     cpu "Correct."
     you "And if the system mirrors its user..."
-    you "What exactly am i bringing into it?"
+    you "What exactly am I bringing into it?"
     pause 1.5
     show CPU chill
     cpu "That is a variable you must calculate."
     you "You're not going to explain that, are you?"
     cpu "Not yet."
     show CPU thumbs
-    cpu "Alright"
+    cpu "Alright."
     cpu "Go meet the kid."
     cpu "Proceed carefully."
-    you "i'll try."
+    you "I'll try."
     scene bg black with fade
     jump FAN
 
+# =====================================================
+# FAN INTERACTION
+# =====================================================
+
 label FAN:
-    $ frienship = 0
+    $ friendship = 0
     scene FAN_room
     system "LOCATION: COOLING SECTOR\nENTITY DETECTED: FAN\nCORRUPTION LEVEL:70\nFRIENDSHIP: 0"
-    show Fanny down
+    show fan down
     fan "...Hello?"
     you "Hi."
     fan "Are you... loud?"
@@ -633,47 +690,47 @@ label FAN:
             jump Fanny_playful
         "I don't have time for this.":
             jump Fanny_impatient
-    
+
 label Fanny_gentle:
     you "No, I'll be gentle."
-    show Fanny chill
+    show fan chill
     fan "Oh... okay."
     fan "That's good."
     $ friendship += 5
     "Friendship +5"
     fan "it's been really noisy lately."
-    you "noisy how?"
-    show Fanny down
+    you "Noisy how?"
+    show fan down
     fan "Everything feels hot... buzzing too fast."
     fan "I can't keep it cool."
     jump FAN2
 
 label Fanny_playful:
     you "Depends... are you going to yell?"
-    show Fanny WTF
+    show fan WTF
     fan "I don't yell!"
-    show Fanny down
+    show fan down
     fan "I just spin... really fast."
     fan "Faster than I should."
     you "That doesn't sound safe."
     fan "It isn't. But I try."
     $ friendship += 3
-    "friendship +3"
+    "Friendship +3"
     jump FAN2
 
 label Fanny_impatient:
     you "I don't have time for this."
-    show Fanny WTF
+    show fan WTF
     fan "Oh... okay."
     fan "Then I'll spin faster."
-    show Fanny confused
+    show fan confused
     fan "Maybe that'll help."
     $ friendship -= 5
     "Friendship -5\nCorruption level: 75"
     jump FAN2
 
 label FAN2:
-    show Fanny down
+    show fan down
     fan "I can't tell how fast to spin anymore."
     fan "Too slow and it overheats."
     fan "Too fast and I shake."
@@ -690,36 +747,158 @@ label FAN2:
 
 label Fanny_reassuring:
     you "You're doing fine, just breathe."
-    show Fanny chill
-    fan "really?"
+    show fan chill
+    fan "Really?"
     fan "You're not mad?"
     fan "It feels... cooler already."
     you "Yeah. We'll find the right speed together."
-    fan "Okay... lets try."
+    fan "Okay... let's try."
     $ friendship += 8
+    $ corruption_level = 65
     "Friendship +8\nCorruption level: 65"
     jump Fan_minigame
 
 label Fanny_directive:
     you "Slow down, or you'll break."
-    show Fanny dowm
+    show fan down
     fan "I know... I'm trying."
     fan "It's hard to know the middle..."
     you "Just follow me. I'll guide you."
     $ friendship += 5
+    $ corruption_level = 67
     "Friendship +5\nCorruption level: 67"
     jump Fan_minigame
 
 label Fanny_harsh:
     you "You're useless, I'll do it myself."
-    show Fanny WTF
+    show fan WTF
     fan "I... I can't..."
-    fan "i just spin..."
-    $ frienship -= 10
+    fan "I just spin..."
+    $ friendship -= 10
+    $ corruption_level = 85
     "Friendship -10\nCorruption level: 85"
     fan "I can't help you..."
     fan "Not like this."
     jump Fan_fail
+
+# =====================================================
+# FAN MINIGAME
+# =====================================================
+
+label Fan_minigame:
+
+    show fan determined
+
+    fan "If you wish to help me..."
+    fan "Stabilize my speed."
+    fan "Show me you can keep balance."
+
+    python:
+        drag_blocks = ["1","2","3","4"]
+        correct_slots = {}
+        for block in drag_blocks:
+            correct_slots[block] = random.choice(list(slots_pos.keys()))
+
+    call screen fan_sort_minigame
+    return
+
+screen fan_sort_minigame():
+
+    modal True
+
+    add "bg_FAN_room.png"
+
+    for slot, pos in slots_pos.items():
+        add "fan_slot.png" xpos pos[0] ypos pos[1]
+
+    for block in drag_blocks:
+
+        drag:
+            drag_name block
+            draggable True
+            xpos renpy.random.randint(100,700)
+            ypos 150
+            dragged snap_block
+            add "fan_block.png"
+
+    textbutton "Done" action Function(confirm_fan_blocks) xpos 850 ypos 50
+
+init python:
+
+    def confirm_fan_blocks():
+        correct_count = 0
+        for block in drag_blocks:
+            if hasattr(block, "x") and hasattr(block, "y"):
+                slot_x, slot_y = slots_pos[correct_slots[block]]
+                if abs(block.x - slot_x) < 60 and abs(block.y - slot_y) < 60:
+                    correct_count += 1
+        if correct_count >= 3:
+            global friendship, corruption_level, map_fragments
+            map_fragments += 1
+            friendship += 10
+            corruption_level = 50
+            renpy.jump("Fan_win")
+        elif correct_count >= 1:
+            friendship += 5
+            corruption_level = 60
+            renpy.jump("Fan_partial")
+        else:
+            friendship -= 10
+            corruption_level = 90
+            renpy.jump("Fan_fail")
+
+label Fan_win:
+
+    show fan happy
+    fan "Yes! I feel balanced."
+    fan "Take the map fragment."
+    hide fan happy
+    $ map_fragments += 1
+    $ friendship += 10
+    jump CPU_postFanwin
+
+label Fan_partial:
+
+    show fan down
+    fan "Better... but not perfect."
+    fan "I can stabilize some of my speed."
+    "You gain partial control but the map fragment is still locked."
+    $ friendship += 5
+    jump CPU_postFanwin
+
+label Fan_fail:
+
+    show fan frustrated
+    fan "I can't stabilize..."
+    fan "You failed to help me."
+    $ friendship -= 10
+    "Friendship -10\nMAP FRAGMENT LOCKED"
+    jump CPU_postFanfail
+
+# =====================================================
+# CPU RESPONSE AFTER FAN
+# =====================================================
+
+label CPU_postFanwin:
+    scene bg computer
+    show CPU thumbs
+    you "I did it."
+    you "The Fan stabilized."
+    cpu "Confirmed."
+    cpu "Corruption within the Cooling Sector has decreased."
+    you "Another fragment?"
+    cpu "Yes."
+    cpu "System integrity improved further."
+    jump NEXT_COMPONENT  # Continue to next component logic
+
+label CPU_postFanfail:
+    scene bg computer
+    show CPU down
+    you "That didn't go well."
+    cpu "Instability increases."
+    cpu "You will need to attempt recovery again later."
+    jump NEXT_COMPONENT  # Continue to next component logic
+
 
 
 
