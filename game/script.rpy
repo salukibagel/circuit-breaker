@@ -39,7 +39,7 @@ image bg RAM_gym = 'images/bg RAM_gym.png'
 image bg computer = 'images/bg computer.png'
 image bg glowing_tunnel = 'images/bg glowing_tunnel.png'
 image bg RAM_gym_red = 'images/bg RAM_gym_red.png'
-image bg light_tunnel = Transform('images/bg light_tunnel.png', zoom = 3.0)
+image bg light_tunnel = Transform('images/bg light_tunnel.png', zoom = 7.0)
 
 # =====================================================
 # DEFAULT VARIABLES
