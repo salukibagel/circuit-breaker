@@ -354,9 +354,8 @@ label RAM_failed:
     show RAM angry
     ram "I do not trust you."
     ram "I cannot share the fragments."
-
-    return
-
+    scene bg black with fade
+    jump CPU_postRAMfail
 
 # =====================================================
 # MINI GAME
@@ -424,8 +423,197 @@ label RAM_win:
     ram "My memory stabilizes."
     ram "Take the map fragment."
     hide RAM happy
+    jump CPU_postRAMwin
+    
+label CPU_postRAMfail:
+    scene bg black
+    pause 1.0
+    scene bg computer
+    you "That did not go well."
+    show CPU thumbs
+    cpu "Correct."
+    you "You don't have to sound so pleased about it"
+    show CPU down
+    cpu "I am not pleased."
+    cpu "I am evaluating."
+    you "RAM wouldn't trust me."
+    you "I tried."
+    you "I really did."
+    show CPU chill
+    cpu "Effort does not always translate to stability."
+    you "You said friendship threshold."
+    you "So I failed that."
+    show CPU thumbs
+    cpu "Yes."
+    you "Great."
+    you "Amazing."
+    you "Love that for me."
+    cpu "Sarcasm detected."
+    you "Oh good. At least something in here works."
+    cpu "Your frustration is increasing."
+    you "You think."
+    jump CPU_postRAM
 
-    return
+label CPU_postRAMwin:
+    scene bg computer
+    show CPU thumbs
+    you "I did it."
+    you "RAM stabilized."
+    cpu "confirmed."
+    cpu "Corruption within the Memory Sector has decreased."
+    you "You could at least pretend to sound impressed."
+    cpu "The result was statistically improbable given your inital approach."
+    you "That almost sounded like a compliment."
+    show CPU chill
+    cpu "It was an observation."
+    you "RAM trusted me."
+    you "I didn't think that would work."
+    show CPU thumbs
+    cpu "Trust was achieved through adaptive behaviour."
+    you "I just... slowed down."
+    you "Listened."
+    cpu "Correct."
+    cpu "You adjusted your input instead of forcing output."
+    you "When you say it like that it sounds less emotional and more mechanical."
+    cpu "The distinction may be smaller than you believe."
+    pause 0.2
+    show CPU chill
+    you "RAM gave me the fragment."
+    you "So that's one piece of the map right?"
+    cpu "Yes."
+    cpu "One fragment recovered."
+    cpu "System integrity has marginally improved."
+    you "Marginally."
+    you "You really don't celebrate wins, do you?"
+    cpu "Premature celebration increases vulnerability."
+    you "Wow."
+    you "You're exhausting."
+    pause 0.2
+    cpu "However."
+    you "However?"
+    cpu "Your stabilization of the Memory Sector prevented further spread."
+    you "That sounds important."
+    cpu "It is."
+    pause 0.1
+    you "So I can do this."
+    you "I can actuallu fix this."
+    show CPU thumbs
+    cpu "Evidence suggests it is possible."
+    you "That's the most encouraging thing you've said all night."
+    pause 0.1
+    show CPU chill
+    cpu "Your emotional state has shifted."
+    you "Yeah."
+    you "I feel... lighter."
+    jump CPU_postRAM
+
+label CPU_postRAM:
+    cpu "Heightened frustration contributes to systemic destabilization."
+    you "Are you saying this is my fault?"
+    show CPU down
+    cpu "I am stating that the corruption did not originate internally."
+    you "You keep saying that."
+    you "What does it mean?"
+    cpu "The system reflects it's user."
+    you "That's vague."
+    cpu "It's accurate."
+    pause 2.0
+    you "So what now?"
+    you "I can't just stop."
+    you "I don't have time to spiral."
+    show CPU chill
+    cpu "Correct."
+    cpu "The next component awaits."
+    you "Who?"
+    cpu "Cooling sector."
+    cpu "Fan entity."
+    you "Fan."
+    you "Like... the little spinning thing?"
+    cpu "Yes."
+    you "Is it going to yell at me too?"
+    cpu "Unlikely."
+    you "Why?"
+    cpu "The Fan presents as a juvenile process."
+    you "Why?"
+    cpu "A child."
+    pause 1.0
+    you "You're telling me part of my computer is a kid."
+    show CPU thumbs
+    cpu "Yes."
+    you "That feels unfair."
+    cpu "Clarify."
+    you "Ram was loud and aggressive."
+    you "I can handle that."
+    you "A kid is different."
+    show CPU confused
+    cpu "Explain."
+    you "If I mess up with RAM, It's just a confrontation."
+    you "If I mess uo with a kid... that's on me."
+    pause 1.0
+    show CPU chill
+    cpu "The Fan regulates temperature."
+    cpu "It prevents overheating."
+    show CPU WTF
+    cpu "When distresed, it withdraws."
+    cpu "When overwhelemed, it spins erratically."
+    show CPU chill
+    you "So it's... sensitive."
+    cpu "Yes."
+    you "Does it know what's happening?"
+    cpu "it detects rising heat levels."
+    cpu "It does not comprehend corruption."
+    you "So it's scared."
+    cpu "Yes."
+    pause 0.5
+    you "What does it need?"
+    show CPU thumbs
+    cpu "Calm."
+    cpu "Consistency."
+    cpu "Reassurance."
+    you "You're asking a lot from someone on a deadline."
+    cpu "deadlines do not override emotionl requirements."
+    you "You're enjoying this, aren't you?"
+    show CPU chill
+    cpu "I do not experience enjoyment."
+    you "That sounded defensive."
+    pause 0.5
+    cpu "The Fan will not respond to urgency."
+    cpu "Approach slowly."
+    cpu "Lower your tone."
+    cpu "Stabilie your input."
+    you "Stabilize my input."
+    you "You mean don't panic."
+    cpu "Correct."
+    you "What happens if I fail again?"
+    show CPU down
+    cpu "Instability increases."
+    cpu "time compression accelerates."
+    cpu "Recovery probablilty declines."
+    you "You could just say /"it gets worse."/"
+    cpu "It gets worse."
+    show CPU thumbs
+    you "Okay."
+    you "Cooling Sector."
+    you "Gentle."
+    you "Calm."
+    you "No yelling."
+    cpu "Correct."
+    you "And if the system mirrors its user..."
+    you "What exactly am i bringing into it?"
+    pause 1.5
+    show CPU chill
+    cpu "That is a variable you must calculate."
+    you "You're not going to explain that, are you?"
+    cpu "Not yet."
+    show CPU thumbs
+    cpu "Alright"
+    cpu "Go meet the kid."
+    cpu "Proceed carefully."
+    you "i'll try."
+    scene bg black with fade
+    jump FAN
+
+label FAN:
 
 
 
