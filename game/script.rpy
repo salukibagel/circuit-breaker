@@ -10,6 +10,33 @@ define error_message = Character("404")
 define system = Character(None)
 define fan = Character("Fanny")
 
+image CPU WTF = 'game/images/CPU WTF.png'
+image CPU chill = 'game/images/CPU chill.png'
+image CPU thumbs = 'game/images/CPU thumbs.png'
+image CPU confused = 'game/images/CPU confused.png'
+image CPU down = 'game/images/CPU down.png'
+image RAM down = 'game/images/RAM down.png'
+image RAM confused = 'game/images/RAM confused.png'
+image RAM chill = 'game/images/RAM chill.png'
+image RAM WTF = 'game/images/RAM WTF.png'
+image RAM thumbs = 'game/images/RAM thumbs.png'
+image Fanny down = 'game/images/Fanny down.png'
+image Fanny thumbs = 'game/image/Fanny thumbs.png'
+image Fanny WTF = 'gameimages/Fanny WTf.png'
+image Fanny chill = 'game/images/Fanny chill.png'
+image Fanny confused = 'game/images/Fanny confused.png'
+image clock 1200 = 'game/images/clock 1200.png'
+image clock 1203 = 'game/images/clock 1203.png'
+image clock 1207 = 'game/images/clock 1207.png'
+image error_message = 'game/images/error_message.png'
+image bg black = 'game/images/bg black.png'
+image bg FAN_room = 'game/images/bg FAN_room.png'
+image bg destabilized_tunnel = 'game/images/destabilized_tunnel.png'
+image bg RAM_gym = 'game/images/RAM_gym.png'
+image bg computer = 'game/images/bg computer.png'
+image bg glowing_tunnel = 'game/images/bg glowing_tunnel.png'
+image bg RAM_gym_red = 'game/images/RAM_gym_red.png'
+
 # =====================================================
 # DEFAULT VARIABLES
 # =====================================================
