@@ -10,7 +10,10 @@ define error_message = Character("404")
 define system = Character(None)
 define fan = Character("Fanny")
 
-image CPU WTF = Transform(Transform('images/CPU WTF.png', zoom=0.5), zoom=0.5)
+$ friendship = 0
+$ map_fragments = 0
+
+image CPU WTF = Transform('images/CPU WTF.png', zoom=0.5)
 image CPU chill = Transform('images/CPU chill.png', zoom=0.5)
 image CPU thumbs = Transform('images/CPU thumbs.png', zoom=0.5)
 image CPU confused = Transform('images/CPU confused.png', zoom=0.5)
@@ -20,22 +23,23 @@ image RAM confused = Transform('images/RAM confused.png', zoom=0.5)
 image RAM chill = Transform('images/RAM chill.png', zoom=0.5)
 image RAM WTF = Transform('images/RAM WTF.png', zoom=0.5)
 image RAM thumbs = Transform('images/RAM thumbs.png', zoom=0.5)
-image Fanny down = Transform('images/Fanny down.png', zoom=0.5)
-image Fanny thumbs = Transform('image/Fanny thumbs.png', zoom=0.5)
-image Fanny WTF = Transform('images/Fanny WTf.png', zoom=0.5)
-image Fanny chill = Transform('images/Fanny chill.png', zoom=0.5)
-image Fanny confused = Transform('images/Fanny confused.png', zoom=0.5)
-image clock 1200 = Transform('images/clock 1200.png', zoom=0.5)
-image clock 1203 = Transform('images/clock 1203.png', zoom=0.5)
-image clock 1207 = Transform('images/clock 1207.png', zoom=0.5)
-image error_message = Transform('images/error_message.png', zoom=0.5)
-image bg black = Transform('images/bg black.png', zoom=0.5)
-image bg FAN_room = Transform('images/bg FAN_room.png', zoom=0.5)
-image bg destabilized_tunnel = Transform('images/bg destabilized_tunnel.png', zoom=0.5)
-image bg RAM_gym = Transform('images/bg RAM_gym.png', zoom=0.5)
-image bg computer = Transform('images/bg computer.png', zoom=0.5)
-image bg glowing_tunnel = Transform('images/bg glowing_tunnel.png', zoom=0.5)
-image bg RAM_gym_red = Transform('images/bg RAM_gym_red.png', zoom=0.5)
+image Fanny down = Transform('images/Fanny down.png', zoom=0.35)
+image Fanny thumbs = Transform('image/Fanny thumbs.png', zoom=0.35)
+image Fanny WTF = Transform('images/Fanny WTf.png', zoom=0.35)
+image Fanny chill = Transform('images/Fanny chill.png', zoom=0.35)
+image Fanny confused = Transform('images/Fanny confused.png', zoom=0.35)
+image clock 1200 = Transform('images/clock 1200.png', zoom=0.25)
+image clock 1203 = Transform('images/clock 1203.png', zoom=0.25)
+image clock 1207 = Transform('images/clock 1207.png', zoom=0.25)
+image error_message = Transform('images/error_message.png', zoom=0.25)
+image bg black = Transform('images/bg black.png', zoom = 3.0)
+image bg FAN_room = 'images/bg FAN_room.png'
+image bg destabilized_tunnel = 'images/bg destabilized_tunnel.png'
+image bg RAM_gym = 'images/bg RAM_gym.png'
+image bg computer = 'images/bg computer.png'
+image bg glowing_tunnel = 'images/bg glowing_tunnel.png'
+image bg RAM_gym_red = 'images/bg RAM_gym_red.png'
+image bg light_tunnel = 'images/bg light_tunnel.png'
 
 # =====================================================
 # DEFAULT VARIABLES
@@ -69,7 +73,7 @@ label start:
     you "Wait. I was typing. I was finishing the last paragraph."
     you "The conclusion... the bibliography—"
 
-    show clock 1200
+    show clock 1200 at truecenter
     you "Midnight."
     hide clock 1200
 
@@ -77,7 +81,7 @@ label start:
     you "I saved it."
     you "I definitely saved it."
 
-    show error_message
+    show error_message at truecenter
     you "...What?"
     hide error_message
 
@@ -918,7 +922,7 @@ label CPU_postFanwin:
     you "Another fragment?"
     cpu "Yes."
     cpu "System integrity improved further."
-    jump NEXT_COMPONENT  # Continue to next component logic
+    jump ENDGAME  # Continue to next component logic
 
 label CPU_postFanfail:
     scene bg computer
@@ -926,7 +930,67 @@ label CPU_postFanfail:
     you "That didn't go well."
     cpu "Instability increases."
     cpu "You will need to attempt recovery again later."
-    jump NEXT_COMPONENT  # Continue to next component logic
+    jump ENDGAME # Continue to next component logic
+
+# =====================================================
+# ENDGAME SEQUENCE
+# =====================================================
+
+label ENDGAME:
+
+    scene bg computer with fade
+    show CPU chill
+    pause 1.0
+
+    cpu "You have returned."
+    cpu "Evaluation complete."
+
+    if map_fragments == 2:
+        # Player collected both RAM and FAN fragments
+        show CPU thumbs
+        cpu "You recovered all memory fragments."
+        cpu "System integrity is nearly restored."
+        you "So... my homework?"
+        cpu "Confirmed."
+        cpu "With all fragments restored, I can reconstruct your file."
+        cpu "Congratulations. Your assignment is complete."
+        you "I can't believe it... I actually fixed it!"
+        cpu "Your adaptive strategies and measured actions resulted in maximum recovery."
+        you "So I really did it..."
+        cpu "Yes. Your file is intact, and the system is stable."
+        scene bg light_tunnel with fade
+        you "I saved my homework. Finally."
+        system "ENDGAME: SUCCESS - ALL FRAGMENTS RECOVERED"
+        return
+
+    elif map_fragments == 1:
+        # Player collected one fragment
+        show CPU chill
+        cpu "You recovered one memory fragment."
+        cpu "Partial stability achieved."
+        you "Can I get my homework?"
+        cpu "Insufficient fragments to reconstruct the file."
+        you "So... I only partially succeeded?"
+        cpu "Correct. You may leave the system."
+        show CPU down
+        you "At least I stabilized part of it."
+        cpu "System remains partially corrupted."
+        system "ENDGAME: PARTIAL SUCCESS - ONE FRAGMENT RECOVERED"
+        scene bg light_tunnel with fade
+        return
+
+    else:
+        # Player collected no fragments
+        show CPU WTF
+        cpu "You recovered no memory fragments."
+        cpu "System integrity failure imminent."
+        you "No... what happens now?"
+        cpu "Corruption has reached 100%."
+        cpu "All processes destabilized."
+        scene bg black with fade
+        you "My homework... everything..."
+        system "ENDGAME: FAILURE - SYSTEM FULLY CORRUPTED"
+        return
 
 
 
