@@ -44,7 +44,7 @@ label start:
 
     show clock 1200
     you "Midnight."
-    hide clock
+    hide clock 1200
 
     you "No no no no — it's due at 6AM."
     you "I saved it."
@@ -121,7 +121,7 @@ label CPU_Initial:
     you "Six hours."
     you "I can do this."
     you "I think."
-    hide clock
+    hide clock 1203
 
     cpu "You will begin with the Memory Sector."
     cpu "The RAM entity is unstable but closest to recovery."
@@ -276,7 +276,7 @@ label rude_RAM:
 
     scene bg RAM_gym_red
 
-    show RAM angry
+    show RAM confused
 
     ram "Disrespect detected."
     ram "You think memory is easy?"
@@ -380,7 +380,7 @@ label RAM_failed:
 
 label RAM_minigame:
 
-    show RAM determined
+    show RAM chill
 
     ram "If you wish to help..."
     ram "Prove your strength."
@@ -401,7 +401,7 @@ screen ram_sort_minigame():
 
     modal True
 
-    add "bg_RAM_gym.png"
+    add "bg RAM_gym.png"
 
     for slot, pos in slots_pos.items():
         add "mem_slot.png" xpos pos[0] ypos pos[1]
@@ -452,18 +452,18 @@ init python:
 
 label RAM_win:
 
-    show RAM happy
+    show RAM thumbs
     ram "Outstanding."
     ram "My memory stabilizes."
     ram "Take the map fragment."
-    hide RAM happy
+    hide RAM thumbs
     $ map_fragments += 1
     $ friendship += 10
     jump CPU_postRAMwin
 
 label RAM_partial:
 
-    show RAM down
+    show RAM chill
     ram "Better… but not perfect."
     ram "I can spare only partial recall."
     "You gain some memory stability but the map fragment is still locked."
@@ -472,7 +472,7 @@ label RAM_partial:
 
 label RAM_minigame_lose:
 
-    show RAM frustrated
+    show RAM WTF
     ram "OVERLOAD! The fragments scatter!"
     ram "You’ll have to come back when you can handle the load."
     $ friendship -= 10
@@ -676,9 +676,9 @@ label CPU_postRAM:
 
 label FAN:
     $ friendship = 0
-    scene FAN_room
+    scene bg FAN_room
     system "LOCATION: COOLING SECTOR\nENTITY DETECTED: FAN\nCORRUPTION LEVEL:70\nFRIENDSHIP: 0"
-    show fan down
+    show Fanny down
     fan "...Hello?"
     you "Hi."
     fan "Are you... loud?"
@@ -693,23 +693,23 @@ label FAN:
 
 label Fanny_gentle:
     you "No, I'll be gentle."
-    show fan chill
+    show Fanny chill
     fan "Oh... okay."
     fan "That's good."
     $ friendship += 5
     "Friendship +5"
     fan "it's been really noisy lately."
     you "Noisy how?"
-    show fan down
+    show Fanny down
     fan "Everything feels hot... buzzing too fast."
     fan "I can't keep it cool."
     jump FAN2
 
 label Fanny_playful:
     you "Depends... are you going to yell?"
-    show fan WTF
+    show Fanny WTF
     fan "I don't yell!"
-    show fan down
+    show Fanny down
     fan "I just spin... really fast."
     fan "Faster than I should."
     you "That doesn't sound safe."
@@ -720,17 +720,17 @@ label Fanny_playful:
 
 label Fanny_impatient:
     you "I don't have time for this."
-    show fan WTF
+    show Fanny WTF
     fan "Oh... okay."
     fan "Then I'll spin faster."
-    show fan confused
+    show Fanny confused
     fan "Maybe that'll help."
     $ friendship -= 5
     "Friendship -5\nCorruption level: 75"
     jump FAN2
 
 label FAN2:
-    show fan down
+    show Fanny down
     fan "I can't tell how fast to spin anymore."
     fan "Too slow and it overheats."
     fan "Too fast and I shake."
@@ -747,7 +747,7 @@ label FAN2:
 
 label Fanny_reassuring:
     you "You're doing fine, just breathe."
-    show fan chill
+    show Fanny chill
     fan "Really?"
     fan "You're not mad?"
     fan "It feels... cooler already."
@@ -760,7 +760,7 @@ label Fanny_reassuring:
 
 label Fanny_directive:
     you "Slow down, or you'll break."
-    show fan down
+    show Fanny down
     fan "I know... I'm trying."
     fan "It's hard to know the middle..."
     you "Just follow me. I'll guide you."
@@ -771,7 +771,7 @@ label Fanny_directive:
 
 label Fanny_harsh:
     you "You're useless, I'll do it myself."
-    show fan WTF
+    show Fanny WTF
     fan "I... I can't..."
     fan "I just spin..."
     $ friendship -= 10
@@ -787,7 +787,7 @@ label Fanny_harsh:
 
 label Fan_minigame:
 
-    show fan determined
+    show Fanny chill
 
     fan "If you wish to help me..."
     fan "Stabilize my speed."
@@ -806,7 +806,7 @@ screen fan_sort_minigame():
 
     modal True
 
-    add "bg_FAN_room.png"
+    add "bg FAN_room.png"
 
     for slot, pos in slots_pos.items():
         add "fan_slot.png" xpos pos[0] ypos pos[1]
@@ -849,17 +849,17 @@ init python:
 
 label Fan_win:
 
-    show fan happy
+    show Fanny thumbs
     fan "Yes! I feel balanced."
     fan "Take the map fragment."
-    hide fan happy
+    hide Fanny thumbs
     $ map_fragments += 1
     $ friendship += 10
     jump CPU_postFanwin
 
 label Fan_partial:
 
-    show fan down
+    show Fanny down
     fan "Better... but not perfect."
     fan "I can stabilize some of my speed."
     "You gain partial control but the map fragment is still locked."
@@ -868,7 +868,7 @@ label Fan_partial:
 
 label Fan_fail:
 
-    show fan frustrated
+    show Fanny WTF
     fan "I can't stabilize..."
     fan "You failed to help me."
     $ friendship -= 10
