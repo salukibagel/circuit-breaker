@@ -39,7 +39,7 @@ image bg RAM_gym = 'images/bg RAM_gym.png'
 image bg computer = 'images/bg computer.png'
 image bg glowing_tunnel = 'images/bg glowing_tunnel.png'
 image bg RAM_gym_red = 'images/bg RAM_gym_red.png'
-image bg light_tunnel = 'images/bg light_tunnel.png'
+image bg light_tunnel = Transform('images/bg light_tunnel.png', zoom = 3.0)
 
 # =====================================================
 # DEFAULT VARIABLES
@@ -407,111 +407,76 @@ label RAM_failed:
     scene bg black with fade
     jump CPU_postRAMfail
 
-# =====================================================
-# RAM MINIGAME
-# =====================================================
-
 label RAM_minigame:
 
+    scene bg RAM_gym
     show RAM chill
 
-    ram "If you wish to help..."
-    ram "Prove your strength."
-    ram "Sort the memory blocks."
-    ram "Show me you can handle the load."
+    ram "Alright… let's see if you truly understand memory."
+    ram "Answer correctly, and I can trust you to stabilize me."
 
-    python:
-        import random
-        drag_blocks = ["A","B","C","D"]
-        correct_slots = {}
-        for block in drag_blocks:
-            correct_slots[block] = random.choice(list(slots_pos.keys()))
+    # ==================================================
+    # Question 1
+    # ==================================================
+    menu:
+        "1) What is the main function of RAM in a computer?"
+        "A) To store files permanently":
+            $ friendship -= 5
+            ram "No… that's not me. I forget when power is off."
+        "B) To temporarily store data for quick access by the CPU":
+            $ friendship += 5
+            ram "Correct! Fast access is my job."
+        "C) To control the computer's cooling system":
+            $ friendship -= 5
+            ram "No, I don't deal with that."
 
-    call screen ram_sort_minigame
-    return
+    # ==================================================
+    # Question 2
+    # ==================================================
+    menu:
+        "2) What happens if RAM is insufficient for running programs?"
+        "A) The computer will run slower or programs may crash":
+            $ friendship += 5
+            ram "Exactly! I can only hold so much at once."
+        "B) The computer gains more permanent storage":
+            $ friendship -= 5
+            ram "No, I can't create permanent storage."
+        "C) The CPU will shut down immediately":
+            $ friendship -= 5
+            ram "Not quite. Programs just lag or fail."
 
-screen ram_sort_minigame():
+    # ==================================================
+    # Question 3
+    # ==================================================
+    menu:
+        "3) Which type of memory is volatile and loses data when power is off?"
+        "A) RAM":
+            $ friendship += 5
+            ram "Correct! I only remember while powered."
+        "B) Hard drive":
+            $ friendship -= 5
+            ram "No… hard drives are permanent storage."
+        "C) SSD":
+            $ friendship -= 5
+            ram "No, that's also non-volatile."
 
-    modal True
-
-    add "bg RAM_gym.png"
-
-    for slot, pos in slots_pos.items():
-        add "mem_slot.png" xpos pos[0] ypos pos[1]
-
-    for block in drag_blocks:
-
-        drag:
-            drag_name block
-            draggable True
-            xpos renpy.random.randint(100,700)
-            ypos 150
-            dragged snap_block
-            add "mem_block.png"
-
-    textbutton "Done" action Function(confirm_blocks) xpos 850 ypos 50
-
-init python:
-
-    def snap_block(drags, drop):
-        drag = drags[0]
-        block = drag.drag_name
-        slot_x, slot_y = slots_pos[correct_slots[block]]
-        if abs(drag.x - slot_x) < 60 and abs(drag.y - slot_y) < 60:
-            drag.snap(slot_x, slot_y)
-
-    def confirm_blocks():
-        correct_count = 0
-        for block in drag_blocks:
-            if hasattr(block, "x") and hasattr(block, "y"):
-                slot_x, slot_y = slots_pos[correct_slots[block]]
-                if abs(block.x - slot_x) < 60 and abs(block.y - slot_y) < 60:
-                    correct_count += 1
-        if correct_count >= 3:
-            global memory_fragments_collected, friendship, corruption_level, map_fragments
-            memory_fragments_collected += 1
-            map_fragments += 1
-            friendship += 10
-            corruption_level = 30
-            renpy.jump("RAM_win")
-        elif correct_count >= 1:
-            friendship += 5
-            corruption_level = 45
-            renpy.jump("RAM_partial")
-        else:
-            friendship -= 10
-            corruption_level = 80
-            renpy.jump("RAM_minigame_lose")
-
-label RAM_win:
-
-    show RAM thumbs
-    ram "Outstanding."
-    ram "My memory stabilizes."
-    ram "Take the map fragment."
-    hide RAM thumbs
-    $ map_fragments += 1
-    $ friendship += 10
-    jump CPU_postRAMwin
-
-label RAM_partial:
-
-    show RAM chill
-    ram "Better… but not perfect."
-    ram "I can spare only partial recall."
-    "You gain some memory stability but the map fragment is still locked."
-    $ friendship += 5
-    jump CPU_postRAMwin
-
-label RAM_minigame_lose:
-
-    show RAM WTF
-    ram "OVERLOAD! The fragments scatter!"
-    ram "You’ll have to come back when you can handle the load."
-    $ friendship -= 10
-    "Friendship -10"
-    "MAP FRAGMENT LOCKED"
-    jump CPU_postRAMfail
+    # ==================================================
+    # Evaluate Result
+    # ==================================================
+    if friendship >= 15:
+        show RAM thumbs
+        ram "Outstanding! You really understand memory."
+        ram "I can safely give you a fragment."
+        "Friendship +5\nCorruption level decreases to 50"
+        $ memory_fragments_collected += 1
+        "MAP FRAGMENT 1 OBTAINED"
+        jump CPU_postRAMWin
+    else:
+        show RAM WTF
+        ram "I cannot trust you yet…"
+        "Friendship -5\nCorruption level increases to 75"
+        "MAP FRAGMENT LOCKED"
+        jump CPU_postRAMFail
 
 # =====================================================
 # CPU RESPONSE AFTER RAM
@@ -814,99 +779,76 @@ label Fanny_harsh:
     fan "Not like this."
     jump Fan_fail
 
-# =====================================================
-# FAN MINIGAME
-# =====================================================
-
 label Fan_minigame:
 
+    scene bg FAN_room
     show Fanny chill
 
-    fan "If you wish to help me..."
-    fan "Stabilize my speed."
-    fan "Show me you can keep balance."
+    fan "Okay… let's see if you understand me."
+    fan "Answer correctly, and I can trust you to help me stabilize."
 
-    python:
-        drag_blocks = ["1","2","3","4"]
-        correct_slots = {}
-        for block in drag_blocks:
-            correct_slots[block] = random.choice(list(slots_pos.keys()))
+    # ==================================================
+    # Question 1
+    # ==================================================
+    menu:
+        "1) What is the primary purpose of a fan in a computer?"
+        "A) To help the CPU run faster":
+            $ friendship -= 5
+            fan "Hmm… that's not quite right."
+        "B) To cool down the components and maintain optimal temperature":
+            $ friendship += 5
+            fan "Yes! Cooling is very important."
+        "C) To increase storage capacity":
+            $ friendship -= 5
+            fan "No, that doesn't help me at all."
 
-    call screen fan_sort_minigame
-    return
+    # ==================================================
+    # Question 2
+    # ==================================================
+    menu:
+        "2) How does a computer fan typically work?"
+        "A) By circulating hot air inside the case":
+            $ friendship -= 5
+            fan "Not exactly… we need to get rid of hot air."
+        "B) By pushing cool air in and pulling warm air out":
+            $ friendship += 5
+            fan "Correct! That's how I keep the system balanced."
+        "C) By generating electricity to power the computer":
+            $ friendship -= 5
+            fan "No, that's not my job at all."
 
-screen fan_sort_minigame():
+    # ==================================================
+    # Question 3
+    # ==================================================
+    menu:
+        "3) What happens if a fan in a computer fails?"
+        "A) The system becomes more powerful":
+            $ friendship -= 5
+            fan "No… overheating is dangerous!"
+        "B) The computer will overheat, leading to potential damage or shutdown":
+            $ friendship += 5
+            fan "Exactly! That's why I need to be careful."
+        "C) The computer will run silently and consume less power":
+            $ friendship -= 5
+            fan "Wrong. Silence doesn't fix heat."
 
-    modal True
-
-    add "bg FAN_room.png"
-
-    for slot, pos in slots_pos.items():
-        add "fan_slot.png" xpos pos[0] ypos pos[1]
-
-    for block in drag_blocks:
-
-        drag:
-            drag_name block
-            draggable True
-            xpos renpy.random.randint(100,700)
-            ypos 150
-            dragged snap_block
-            add "fan_block.png"
-
-    textbutton "Done" action Function(confirm_fan_blocks) xpos 850 ypos 50
-
-init python:
-
-    def confirm_fan_blocks():
-        correct_count = 0
-        for block in drag_blocks:
-            if hasattr(block, "x") and hasattr(block, "y"):
-                slot_x, slot_y = slots_pos[correct_slots[block]]
-                if abs(block.x - slot_x) < 60 and abs(block.y - slot_y) < 60:
-                    correct_count += 1
-        if correct_count >= 3:
-            global friendship, corruption_level, map_fragments
-            map_fragments += 1
-            friendship += 10
-            corruption_level = 50
-            renpy.jump("Fan_win")
-        elif correct_count >= 1:
-            friendship += 5
-            corruption_level = 60
-            renpy.jump("Fan_partial")
-        else:
-            friendship -= 10
-            corruption_level = 90
-            renpy.jump("Fan_fail")
-
-label Fan_win:
-
-    show Fanny thumbs
-    fan "Yes! I feel balanced."
-    fan "Take the map fragment."
-    hide Fanny thumbs
-    $ map_fragments += 1
-    $ friendship += 10
-    jump CPU_postFanwin
-
-label Fan_partial:
-
-    show Fanny down
-    fan "Better... but not perfect."
-    fan "I can stabilize some of my speed."
-    "You gain partial control but the map fragment is still locked."
-    $ friendship += 5
-    jump CPU_postFanwin
-
-label Fan_fail:
-
-    show Fanny WTF
-    fan "I can't stabilize..."
-    fan "You failed to help me."
-    $ friendship -= 10
-    "Friendship -10\nMAP FRAGMENT LOCKED"
-    jump CPU_postFanfail
+    # ==================================================
+    # Evaluate Result
+    # ==================================================
+    if friendship >= 15:
+        show Fanny thumbs
+        fan "You really understand me!"
+        fan "I can trust you to help me stabilize."
+        "Friendship +5\nCorruption level decreases to 60"
+        $ memory_fragments_collected += 1
+        "MAP FRAGMENT 2 OBTAINED"
+        jump CPU_postFanWin
+    else:
+        show Fanny WTF
+        fan "I cannot trust you yet…"
+        "Friendship -5\nCorruption level increases to 80"
+        "MAP FRAGMENT LOCKED"
+        jump CPU_postFanFail
 
 # =====================================================
 # CPU RESPONSE AFTER FAN
@@ -985,7 +927,7 @@ label ENDGAME:
         cpu "You recovered no memory fragments."
         cpu "System integrity failure imminent."
         you "No... what happens now?"
-        cpu "Corruption has reached 100%."
+        cpu "Corruption has reached 100."
         cpu "All processes destabilized."
         scene bg black with fade
         you "My homework... everything..."
