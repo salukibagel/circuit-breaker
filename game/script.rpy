@@ -231,6 +231,7 @@ label polite_RAM:
     ram "I can't hold it all."
 
     $ friendship += 5
+    "Friendship +5"
 
     you "It's okay."
     you "You're RAM, right?"
@@ -257,6 +258,7 @@ label flattery_RAM:
     ram "I bench entire applications!"
 
     $ friendship += 8
+    "Friendship + 8"
 
     show RAM down
 
@@ -283,6 +285,7 @@ label rude_RAM:
     ram "I hold everything for you."
 
     $ friendship -= 10
+    "Friendship - 10"
 
     jump RAM_failed
 
@@ -327,6 +330,7 @@ label empathy_RAM:
 
     $ friendship += 10
     $ corruption_level = 55
+    "Friendship +10\nCorruption level 55"
 
     ram "Balance..."
     ram "Maybe I forgot that."
@@ -424,7 +428,7 @@ label RAM_win:
     ram "Take the map fragment."
     hide RAM happy
     jump CPU_postRAMwin
-    
+
 label CPU_postRAMfail:
     scene bg black
     pause 1.0
@@ -614,6 +618,109 @@ label CPU_postRAM:
     jump FAN
 
 label FAN:
+    $ frienship = 0
+    scene FAN_room
+    system "LOCATION: COOLING SECTOR\nENTITY DETECTED: FAN\nCORRUPTION LEVEL:70\nFRIENDSHIP: 0"
+    show Fanny down
+    fan "...Hello?"
+    you "Hi."
+    fan "Are you... loud?"
+    menu:
+        "How do you respond?"
+        "No, I'll be gentle.":
+            jump Fanny_gentle
+        "Depends... are you going to yell?":
+            jump Fanny_playful
+        "I don't have time for this.":
+            jump Fanny_impatient
+    
+label Fanny_gentle:
+    you "No, I'll be gentle."
+    show Fanny chill
+    fan "Oh... okay."
+    fan "That's good."
+    $ friendship += 5
+    "Friendship +5"
+    fan "it's been really noisy lately."
+    you "noisy how?"
+    show Fanny down
+    fan "Everything feels hot... buzzing too fast."
+    fan "I can't keep it cool."
+    jump FAN2
+
+label Fanny_playful:
+    you "Depends... are you going to yell?"
+    show Fanny WTF
+    fan "I don't yell!"
+    show Fanny down
+    fan "I just spin... really fast."
+    fan "Faster than I should."
+    you "That doesn't sound safe."
+    fan "It isn't. But I try."
+    $ friendship += 3
+    "friendship +3"
+    jump FAN2
+
+label Fanny_impatient:
+    you "I don't have time for this."
+    show Fanny WTF
+    fan "Oh... okay."
+    fan "Then I'll spin faster."
+    show Fanny confused
+    fan "Maybe that'll help."
+    $ friendship -= 5
+    "Friendship -5\nCorruption level: 75"
+    jump FAN2
+
+label FAN2:
+    show Fanny down
+    fan "I can't tell how fast to spin anymore."
+    fan "Too slow and it overheats."
+    fan "Too fast and I shake."
+    you "So you're stuck in the middle."
+    fan "I don't know where the middle is."
+    menu: 
+        "How do you respond?"
+        "You're doing fine, just breathe.":
+            jump Fanny_reassuring
+        "Slow down, or you'll break.":
+            jump Fanny_directive
+        "You're useless, I'll do it myself.":
+            jump Fanny_harsh
+
+label Fanny_reassuring:
+    you "You're doing fine, just breathe."
+    show Fanny chill
+    fan "really?"
+    fan "You're not mad?"
+    fan "It feels... cooler already."
+    you "Yeah. We'll find the right speed together."
+    fan "Okay... lets try."
+    $ friendship += 8
+    "Friendship +8\nCorruption level: 65"
+    jump Fan_minigame
+
+label Fanny_directive:
+    you "Slow down, or you'll break."
+    show Fanny dowm
+    fan "I know... I'm trying."
+    fan "It's hard to know the middle..."
+    you "Just follow me. I'll guide you."
+    $ friendship += 5
+    "Friendship +5\nCorruption level: 67"
+    jump Fan_minigame
+
+label Fanny_harsh:
+    you "You're useless, I'll do it myself."
+    show Fanny WTF
+    fan "I... I can't..."
+    fan "i just spin..."
+    $ frienship -= 10
+    "Friendship -10\nCorruption level: 85"
+    fan "I can't help you..."
+    fan "Not like this."
+    jump Fan_fail
+
 
 
 
