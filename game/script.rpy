@@ -4,7 +4,7 @@
 
 define cpu = Character("CPU")
 define ram = Character("Sheep")
-define you = Character("User")
+define you = Character("You")
 define clock = Character("Clock")
 define error_message = Character("404")
 define system = Character(None)
@@ -470,13 +470,13 @@ label RAM_minigame:
         "Friendship +5\nCorruption level decreases to 50"
         $ memory_fragments_collected += 1
         "MAP FRAGMENT 1 OBTAINED"
-        jump CPU_postRAMWin
+        jump CPU_postRAMwin
     else:
         show RAM WTF
         ram "I cannot trust you yet…"
         "Friendship -5\nCorruption level increases to 75"
         "MAP FRAGMENT LOCKED"
-        jump CPU_postRAMFail
+        jump CPU_postRAMfail
 
 # =====================================================
 # CPU RESPONSE AFTER RAM
@@ -842,13 +842,13 @@ label Fan_minigame:
         "Friendship +5\nCorruption level decreases to 60"
         $ memory_fragments_collected += 1
         "MAP FRAGMENT 2 OBTAINED"
-        jump CPU_postFanWin
+        jump CPU_postFanwin
     else:
         show Fanny WTF
         fan "I cannot trust you yet…"
         "Friendship -5\nCorruption level increases to 80"
         "MAP FRAGMENT LOCKED"
-        jump CPU_postFanFail
+        jump CPU_postFanfail
 
 # =====================================================
 # CPU RESPONSE AFTER FAN
