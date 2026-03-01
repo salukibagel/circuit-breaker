@@ -64,7 +64,7 @@ default slots_pos = {
 # =====================================================
 
 label start:
-
+    play music 'background.mp3'
     scene bg black
 
     you "Hello?"
@@ -401,7 +401,7 @@ label dismissive_RAM:
 
 label RAM_failed:
 
-    show RAM angry
+    show RAM WTF
     ram "I do not trust you."
     ram "I cannot share the fragments."
     scene bg black with fade
@@ -777,7 +777,7 @@ label Fanny_harsh:
     "Friendship -10\nCorruption level: 85"
     fan "I can't help you..."
     fan "Not like this."
-    jump Fan_fail
+    jump CPU_postFanfail
 
 label Fan_minigame:
 
@@ -887,7 +887,7 @@ label ENDGAME:
     cpu "You have returned."
     cpu "Evaluation complete."
 
-    if map_fragments == 2:
+    if memory_fragments_collected == 2:
         # Player collected both RAM and FAN fragments
         show CPU thumbs
         cpu "You recovered all memory fragments."
@@ -905,7 +905,7 @@ label ENDGAME:
         system "ENDGAME: SUCCESS - ALL FRAGMENTS RECOVERED"
         return
 
-    elif map_fragments == 1:
+    elif memory_fragments_collected == 1:
         # Player collected one fragment
         show CPU chill
         cpu "You recovered one memory fragment."
