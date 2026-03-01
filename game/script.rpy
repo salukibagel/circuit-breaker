@@ -10,32 +10,32 @@ define error_message = Character("404")
 define system = Character(None)
 define fan = Character("Fanny")
 
-image CPU WTF = 'game/images/CPU WTF.png'
-image CPU chill = 'game/images/CPU chill.png'
-image CPU thumbs = 'game/images/CPU thumbs.png'
-image CPU confused = 'game/images/CPU confused.png'
-image CPU down = 'game/images/CPU down.png'
-image RAM down = 'game/images/RAM down.png'
-image RAM confused = 'game/images/RAM confused.png'
-image RAM chill = 'game/images/RAM chill.png'
-image RAM WTF = 'game/images/RAM WTF.png'
-image RAM thumbs = 'game/images/RAM thumbs.png'
-image Fanny down = 'game/images/Fanny down.png'
-image Fanny thumbs = 'game/image/Fanny thumbs.png'
-image Fanny WTF = 'gameimages/Fanny WTf.png'
-image Fanny chill = 'game/images/Fanny chill.png'
-image Fanny confused = 'game/images/Fanny confused.png'
-image clock 1200 = 'game/images/clock 1200.png'
-image clock 1203 = 'game/images/clock 1203.png'
-image clock 1207 = 'game/images/clock 1207.png'
-image error_message = 'game/images/error_message.png'
-image bg black = 'game/images/bg black.png'
-image bg FAN_room = 'game/images/bg FAN_room.png'
-image bg destabilized_tunnel = 'game/images/destabilized_tunnel.png'
-image bg RAM_gym = 'game/images/RAM_gym.png'
-image bg computer = 'game/images/bg computer.png'
-image bg glowing_tunnel = 'game/images/bg glowing_tunnel.png'
-image bg RAM_gym_red = 'game/images/RAM_gym_red.png'
+image CPU WTF = Transform(Transform('images/CPU WTF.png', zoom=0.5), zoom=0.5)
+image CPU chill = Transform('images/CPU chill.png', zoom=0.5)
+image CPU thumbs = Transform('images/CPU thumbs.png', zoom=0.5)
+image CPU confused = Transform('images/CPU confused.png', zoom=0.5)
+image CPU down = Transform('images/CPU down.png', zoom=0.5)
+image RAM down = Transform('images/RAM down.png', zoom=0.5)
+image RAM confused = Transform('images/RAM confused.png', zoom=0.5)
+image RAM chill = Transform('images/RAM chill.png', zoom=0.5)
+image RAM WTF = Transform('images/RAM WTF.png', zoom=0.5)
+image RAM thumbs = Transform('images/RAM thumbs.png', zoom=0.5)
+image Fanny down = Transform('images/Fanny down.png', zoom=0.5)
+image Fanny thumbs = Transform('image/Fanny thumbs.png', zoom=0.5)
+image Fanny WTF = Transform('images/Fanny WTf.png', zoom=0.5)
+image Fanny chill = Transform('images/Fanny chill.png', zoom=0.5)
+image Fanny confused = Transform('images/Fanny confused.png', zoom=0.5)
+image clock 1200 = Transform('images/clock 1200.png', zoom=0.5)
+image clock 1203 = Transform('images/clock 1203.png', zoom=0.5)
+image clock 1207 = Transform('images/clock 1207.png', zoom=0.5)
+image error_message = Transform('images/error_message.png', zoom=0.5)
+image bg black = Transform('images/bg black.png', zoom=0.5)
+image bg FAN_room = Transform('images/bg FAN_room.png', zoom=0.5)
+image bg destabilized_tunnel = Transform('images/bg destabilized_tunnel.png', zoom=0.5)
+image bg RAM_gym = Transform('images/bg RAM_gym.png', zoom=0.5)
+image bg computer = Transform('images/bg computer.png', zoom=0.5)
+image bg glowing_tunnel = Transform('images/bg glowing_tunnel.png', zoom=0.5)
+image bg RAM_gym_red = Transform('images/bg RAM_gym_red.png', zoom=0.5)
 
 # =====================================================
 # DEFAULT VARIABLES
@@ -181,6 +181,7 @@ label CPU_Initial:
     cpu "Correct."
 
     scene bg glowing_tunnel with fade
+    show CPU chill at right
 
     cpu "Proceed."
     cpu "Return when you recover a fragment."
@@ -195,6 +196,7 @@ label CPU_Initial:
     cpu "Time is a limited resource."
 
     scene bg destabilized_tunnel
+    show CPU chill at right
 
     cpu "And user—"
 

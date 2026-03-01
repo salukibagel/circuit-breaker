@@ -186,7 +186,7 @@ init python:
 
     ## To archive files, classify them as 'archive'.
 
-    # build.classify('game/**.png', 'archive')
+    # build.classify('game/**.png', zoom=0.5), 'archive')
     # build.classify('game/**.jpg', 'archive')
 
     ## Files matching documentation patterns are duplicated in a mac app build,
